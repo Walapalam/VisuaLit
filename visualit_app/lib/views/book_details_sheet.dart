@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'reading_screen.dart';
 
 class BookDetailsSheet extends StatelessWidget {
   final String bookName;
@@ -48,7 +49,12 @@ class BookDetailsSheet extends StatelessWidget {
                       const SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: () {
-                          // Handle Start/Continue Reading button press
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookReadingScreen(bookName: bookName,),
+                            ),
+                          );
                         },
                         child: const Text('Start Reading'),
                       ),
