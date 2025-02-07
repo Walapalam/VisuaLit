@@ -1,8 +1,31 @@
+// lib/views/home.dart
 import 'package:flutter/material.dart';
+import '../core/services/book_loader.dart';
+import '../core/models/book.dart';
 import 'book_details_sheet.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Book> _books = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBooks();
+  }
+
+  Future<void> _loadBooks() async {
+    List<Book> books = await loadBooks();
+    setState(() {
+      _books = books;
+    });
+  }
 
   void _showBookDetails(BuildContext context, String bookName, int index) {
     showModalBottomSheet(
@@ -119,11 +142,12 @@ class Home extends StatelessWidget {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: 10, // Replace with the actual number of books
+                itemCount: _books.length,
                 itemBuilder: (context, index) {
+                  final book = _books[index];
                   return GestureDetector(
                     onTap: () {
-                      _showBookDetails(context, 'Book Name $index', index);
+                      _showBookDetails(context, book.title, index);
                     },
                     child: Column(
                       children: [
@@ -131,12 +155,18 @@ class Home extends StatelessWidget {
                           color: Colors.grey[300],
                           width: 145,
                           height: 185,
-                          child: Center(
-                            child: Text('Book Image $index'),
-                          ),
+                          child: book.coverImage != null
+                              ? Image.memory(book.coverImage!.getBytes())
+                              : Center(child: Text('No Cover')),
                         ),
                         const SizedBox(height: 8.0),
-                        Text('Book Name $index'),
+                        Flexible(
+                          child: Text(
+                            book.title,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                   );
