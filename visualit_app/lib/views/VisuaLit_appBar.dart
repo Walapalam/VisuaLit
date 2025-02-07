@@ -9,11 +9,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontFamily: 'Jersey',
-          fontSize: 30,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 16.0), // Add padding on top
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontFamily: 'Jersey',
+            fontSize: 35,
+          ),
         ),
       ),
       centerTitle: true,
