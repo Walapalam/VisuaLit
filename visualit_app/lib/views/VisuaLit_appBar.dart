@@ -8,7 +8,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: false, // Prevents default back button
       title: Padding(
         padding: const EdgeInsets.only(top: 16.0), // Add padding on top
         child: Text(
@@ -20,6 +20,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.menu, size: 28), // Drawer menu icon
+        onPressed: () {
+          Scaffold.of(context).openDrawer(); // Opens the DrawerMenu
+        },
+      ),
     );
   }
 
