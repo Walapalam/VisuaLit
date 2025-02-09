@@ -38,7 +38,7 @@ class _AudiobookPageState extends State<AudiobookPage> {
     PDFDoc doc = await PDFDoc.fromPath(filePath);
     String text = await doc.text;
     setState(() {
-      _text = text;
+      _text = _filterText(text);
     });
   }
 
@@ -46,12 +46,28 @@ class _AudiobookPageState extends State<AudiobookPage> {
     EpubBook epubBook = await EpubReader.readBook(await File(filePath).readAsBytes());
     String text = epubBook.Chapters?.map((chapter) => chapter.HtmlContent).join('\n') ?? '';
     setState(() {
-      _text = text;
+      _text = _filterText(text);
     });
+  }
+
+  String _filterText(String text) {
+    return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''); // Remove HTML tags and entities
   }
 
   Future<void> _speak() async {
     await _flutterTts.speak(_text);
+  }
+
+  Future<void> _pause() async {
+    await _flutterTts.pause();
+  }
+
+  Future<void> _play() async {
+    await _flutterTts.speak(_text);
+  }
+
+  Future<void> _stop() async {
+    await _flutterTts.stop();
   }
 
   @override
@@ -81,9 +97,24 @@ class _AudiobookPageState extends State<AudiobookPage> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _speak,
-              child: const Text('Convert to Audiobook'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _play,
+                  child: const Text('Play'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: _pause,
+                  child: const Text('Pause'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: _stop,
+                  child: const Text('Stop'),
+                ),
+              ],
             ),
           ],
         ),
