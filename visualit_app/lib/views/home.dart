@@ -241,6 +241,17 @@ class _HomeState extends State<Home> {
                                 : Center(child: Text('No Cover')),
                           ),
                         ),
+                        const SizedBox(height: 5.0),
+                        Text(
+                          book.title,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis, // This will add ellipsis (...) at the end if the text overflows
+                          maxLines: 1, // This will limit the text to one line
+                        ),
                       ],
                     ),
                   );
