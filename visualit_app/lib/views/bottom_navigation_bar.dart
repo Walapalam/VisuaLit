@@ -33,13 +33,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: GNav(
-        gap: 10,
+        gap: 8,
         activeColor: Colors.black,
         color: Colors.black.withOpacity(0.5),
-        iconSize: 26,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        iconSize: 24,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         duration: const Duration(milliseconds: 400),
         tabBackgroundColor: Colors.white.withOpacity(0.6), // Soft selection effect
         curve: Curves.easeInOut,
@@ -60,21 +60,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
   GButton _buildTab(IconData icon, String label, bool isSelected) {
     return GButton(
       icon: icon,
-      iconSize: isSelected ? 32 : 24,
+      iconSize: isSelected ? 28 : 22,
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             icon,
-            size: isSelected ? 34 : 24,
+            size: isSelected ? 30 : 22,
             color: isSelected ? Colors.black : Colors.grey.shade700,
           ),
-          if (isSelected) const SizedBox(height: 4),
+          if (isSelected) const SizedBox(height: 2),
           if (isSelected)
             Text(
               label,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
