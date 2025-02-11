@@ -37,6 +37,19 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android')) {
+                project.android {
+                    if (!hasProperty('namespace') || namespace == null || namespace.isEmpty()) {
+                        // Assign a default namespace based on the project name or group
+                        namespace = project.group.toString() ?: "com.example.${project.name}"
+                    }
+                }
+            }
+        }
+    }
 }
 
 flutter {

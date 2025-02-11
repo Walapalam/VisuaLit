@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iridium_reader_widget/views/viewers/epub_screen.dart';
+
 
 class BookReadingScreen extends StatelessWidget {
   final String bookName;
@@ -12,7 +14,7 @@ class BookReadingScreen extends StatelessWidget {
         title: Text(bookName),
       ),
       body: Center(
-        child: Text('Reading $bookName'),
+        child: EpubScreen.fromPath(filePath: 'assets/ebooks/01_The_Lightning_Thief.epub')
       ),
     );
   }

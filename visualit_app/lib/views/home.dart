@@ -13,9 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Book> _books = [];
-  List<Book> _mostViewedBooks = [];
-  List<Book> _recentlyUploadedBooks = [];
   bool _showMostViewed = true;
   bool _isViewAllMode = false;
   final ScrollController _scrollController = ScrollController();
@@ -35,12 +32,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadBooks() async {
-    List<Book> books = await loadBooks();
-    setState(() {
-      _books = books;
-      _mostViewedBooks = books; // Replace with actual logic to get most viewed books
-      _recentlyUploadedBooks = books; // Replace with actual logic to get recently uploaded books
-    });
+    List<String> books = ["",""];
   }
 
   void _onScroll() {
@@ -67,7 +59,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    List<Book> booksToShow = _showMostViewed ? _mostViewedBooks : _recentlyUploadedBooks;
+    List<String> booksToShow = ["",""];
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -150,7 +142,7 @@ class _HomeState extends State<Home> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookReadingScreen(bookName: book.title),
+                            builder: (context) => BookReadingScreen(bookName: "Book"),
                           ),
                         );
                       },
@@ -162,9 +154,7 @@ class _HomeState extends State<Home> {
                             color: Colors.grey[300],
                             width: 100, // Further adjusted width to match the smaller height
                             height: 120, // Further adjusted height to match the smaller size
-                            child: book.coverImage != null
-                                ? Image.memory(book.coverImage!.getBytes(), fit: BoxFit.cover)
-                                : Center(child: Text('No Cover')),
+                            child: Center(child: Text('No Cover')),
                           ),
                         ),
                       ),
@@ -221,12 +211,12 @@ class _HomeState extends State<Home> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: _books.length,
+                itemCount: 5,
                 itemBuilder: (context, index) {
-                  final book = _books[index];
+                  final book = 0;
                   return GestureDetector(
                     onTap: () {
-                      _showBookDetails(context, book.title, index);
+                      _showBookDetails(context, "", index);
                     },
                     child: Column(
                       children: [
@@ -236,14 +226,12 @@ class _HomeState extends State<Home> {
                             color: Colors.grey[300],
                             width: 145,
                             height: 185,
-                            child: book.coverImage != null
-                                ? Image.memory(book.coverImage!.getBytes(), fit: BoxFit.cover)
-                                : Center(child: Text('No Cover')),
+                            child:  Center(child: Text('No Cover')),
                           ),
                         ),
                         const SizedBox(height: 5.0),
                         Text(
-                          book.title,
+                          "",
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,

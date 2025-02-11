@@ -31,7 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  epubx: 4.0.0
+  iridium_reader_widget:
+    path: ../packages/iridium-main/reader_widget
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
