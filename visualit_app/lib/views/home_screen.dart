@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:visualit_app/views/search_results_page.dart';
 import 'app_colours.dart' as AppColors;
 import 'drawer_menu.dart';
 import 'home.dart';
 import 'profile_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'VisuaLit_appBar.dart'; // Import the custom app bar
+import 'text_to_speech_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,10 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
     Home(),
-    Text(
-      'Audiobook Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    AudiobookPage(),
     Text(
       'Settings Page',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),

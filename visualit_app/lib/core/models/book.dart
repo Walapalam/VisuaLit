@@ -1,64 +1,34 @@
-// lib/models/book.dart
-import 'package:epubx/epubx.dart';
+// lib/core/models/book.dart
+import 'dart:typed_data';
+import 'package:epubx/epubx.dart' as epubx;
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 class Book {
-  final String title;
-  final String author;
-  final List<String> authors;
-  final Image? coverImage;
-  final List<Chapter> chapters;
-  final Map<String, EpubByteContentFile> images;
-  final Map<String, EpubTextContentFile> htmlFiles;
-  final Map<String, EpubTextContentFile> cssFiles;
-  final Map<String, EpubByteContentFile> fonts;
-  final Map<String, EpubContentFile> allFiles;
-  final List<Contributor> contributors;
-  final List<Metadata> metadata;
+  final epubx.EpubBook epubBook;
 
-  Book({
-    required this.title,
-    required this.author,
-    required this.authors,
-    this.coverImage,
-    required this.chapters,
-    required this.images,
-    required this.htmlFiles,
-    required this.cssFiles,
-    required this.fonts,
-    required this.allFiles,
-    required this.contributors,
-    required this.metadata,
-  });
+  Book(epubx.EpubBook? epubBook) : epubBook = epubBook ?? epubx.EpubBook();
+
+  String get title => epubBook.Title ?? "";
+  String get author => epubBook.Author ?? "";
+  List<String> get authors => epubBook.AuthorList?.whereType<String>().toList() ?? [];
+  Image? get coverImage => epubBook.CoverImage != null ? Image.memory(Uint8List.fromList(img.encodePng(epubBook.CoverImage!))) : null;
+  List<Chapter> get chapters => epubBook.Chapters?.map((chapter) => Chapter(chapter)).toList() ?? [];
+  Map<String, Image> get images {
+    final images = <String, Image>{};
+    epubBook.Content?.Images?.forEach((key, value) {
+      images[key] = Image.memory(Uint8List.fromList(value.Content!));
+    });
+    return images;
+  }
 }
 
 class Chapter {
-  final String title;
-  final String htmlContent;
-  final List<Chapter> subChapters;
+  final epubx.EpubChapter epubChapter;
 
-  Chapter({
-    required this.title,
-    required this.htmlContent,
-    required this.subChapters,
-  });
-}
+  Chapter(this.epubChapter);
 
-class Contributor {
-  final String name;
-  final String role;
-
-  Contributor({
-    required this.name,
-    required this.role,
-  });
-}
-
-class Metadata {
-  final String name;
-  final String content;
-
-  Metadata({
-    required this.name,
-    required this.content,
-  });
+  String get title => epubChapter.Title ?? "";
+  String get htmlContent => epubChapter.HtmlContent ?? "";
+  List<Chapter> get subChapters => epubChapter.SubChapters?.map((subChapter) => Chapter(subChapter)).toList() ?? [];
 }
