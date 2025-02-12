@@ -155,12 +155,12 @@ class _HomeState extends State<Home> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Container(
-                            color: Colors.grey[300],
-                            width: 100, // Further adjusted width to match the smaller height
+                            color: Colors.transparent,
+                            width: 80, // Further adjusted width to match the smaller height
                             height: 120, // Further adjusted height to match the smaller size
                             child: book.coverImage ?? Center(child: Text('No Cover')),
                           ),

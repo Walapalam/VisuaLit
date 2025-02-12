@@ -33,25 +33,32 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      child: GNav(
-        gap: 10,
-        activeColor: Colors.black,
-        color: Colors.black.withOpacity(0.5),
-        iconSize: 26,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        duration: const Duration(milliseconds: 400),
-        tabBackgroundColor: Colors.white.withOpacity(0.6), // Soft selection effect
-        curve: Curves.easeInOut,
-        rippleColor: Colors.black12,
-        selectedIndex: selectedIndex,
-        onTabChange: onItemTapped,
-        tabs: [
-          _buildTab(Icons.account_circle, "Profile", selectedIndex == 0),
-          _buildTab(Icons.add, "Add", selectedIndex == 1),
-          _buildTab(Icons.home, "Home", selectedIndex == 2),
-          _buildTab(Icons.audiotrack, "Audiobook", selectedIndex == 3),
-          _buildTab(Icons.settings, "Settings", selectedIndex == 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: GNav(
+              gap: 10,
+              activeColor: Colors.black,
+              color: Colors.black.withOpacity(0.5),
+              iconSize: 20,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Reduced vertical padding
+              duration: const Duration(milliseconds: 400),
+              tabBackgroundColor: Colors.white.withOpacity(0.9), // Soft selection effect
+              curve: Curves.easeInOut,
+              rippleColor: Colors.black12,
+              selectedIndex: selectedIndex,
+              onTabChange: onItemTapped,
+              tabs: [
+                _buildTab(Icons.account_circle, "Profile", selectedIndex == 0),
+                _buildTab(Icons.add, "Add", selectedIndex == 1),
+                _buildTab(Icons.home, "Home", selectedIndex == 2),
+                _buildTab(Icons.audiotrack, "Audiobook", selectedIndex == 3),
+                _buildTab(Icons.settings, "Settings", selectedIndex == 4),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -74,7 +81,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             Text(
               label,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
