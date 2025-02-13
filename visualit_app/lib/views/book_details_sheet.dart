@@ -1,5 +1,5 @@
-// lib/views/book_details_sheet.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import '../core/models/book.dart';
 import 'reading_screen.dart';
 
@@ -51,7 +51,7 @@ class BookDetailsSheet extends StatelessWidget {
                               style: const TextStyle(fontSize: 16),
                             ),
                             const SizedBox(height: 16.0),
-                            ElevatedButton(
+                            ElevatedButton.icon(
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -60,7 +60,16 @@ class BookDetailsSheet extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: const Text('Start Reading'),
+                              icon: const Icon(CupertinoIcons.book),
+                              label: const Text('Start Reading'),
+                            ),
+                            const SizedBox(height: 8.0),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                // Handle start listening action
+                              },
+                              icon: const Icon(CupertinoIcons.headphones),
+                              label: const Text('Start Listening'),
                             ),
                           ],
                         ),
