@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import '../core/models/book.dart';
 
 class BookReadingScreen extends StatefulWidget {
@@ -19,6 +20,22 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
     setState(() {
       _showBars = !_showBars;
     });
+  }
+
+  void _showContextMenu(BuildContext context, Offset position) {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        position & const Size(40, 40), // smaller rect, the touch area
+        Offset.zero & overlay.size, // Bigger rect, the entire screen
+      ),
+      items: [
+        const PopupMenuItem<int>(value: 0, child: Text('Option 1')),
+        const PopupMenuItem<int>(value: 1, child: Text('Option 2')),
+        const PopupMenuItem<int>(value: 2, child: Text('Option 3')),
+      ],
+    );
   }
 
   @override
@@ -75,9 +92,8 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: ListView(
                 children: [
-                  Text(
-                    chapter.htmlContent,
-                    style: const TextStyle(fontSize: 16),
+                  Html(
+                    data: chapter.htmlContent,
                   ),
                 ],
               ),
