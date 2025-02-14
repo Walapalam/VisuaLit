@@ -1,85 +1,178 @@
+// lib/views/home.dart
 import 'package:flutter/material.dart';
+import '../core/services/book_loader.dart';
+import '../core/models/book.dart';
 import 'book_details_sheet.dart';
+import 'reading_screen.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
-  void _showBookDetails(BuildContext context, String bookName, int index) {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Book> _books = [];
+  List<Book> _mostViewedBooks = [];
+  List<Book> _recentlyUploadedBooks = [];
+  bool _showMostViewed = true;
+  bool _isViewAllMode = false;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBooks();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadBooks() async {
+    List<Book> books = await loadBooks();
+    setState(() {
+      _books = books;
+      _mostViewedBooks = books; // Replace with actual logic to get most viewed books
+      _recentlyUploadedBooks = books; // Replace with actual logic to get recently uploaded books
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels > 50) {
+      setState(() {
+        _isViewAllMode = true;
+      });
+    } else {
+      setState(() {
+        _isViewAllMode = false;
+      });
+    }
+  }
+
+  void _showBookDetails(BuildContext context, Book book) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return BookDetailsSheet(bookName: bookName, index: index);
+        return BookDetailsSheet(book: book);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Book> booksToShow = _showMostViewed ? _mostViewedBooks : _recentlyUploadedBooks;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Search bar with tweaking icon
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Stack(
-              children: [
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+          if (!_isViewAllMode) ...[
+            // Search bar with tweaking icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.tune),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.tune),
+                      onPressed: () {
+                        // Handle tweaking icon press
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            // Buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ElevatedButton(
                     onPressed: () {
-                      // Handle tweaking icon press
+                      setState(() {
+                        _showMostViewed = true;
+                      });
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text('Most Viewed'),
                   ),
-                ),
-              ],
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _showMostViewed = false;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text('Recently Uploaded'),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16.0),
-          // Buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle Most Viewed button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text('Most Viewed'),
+            const SizedBox(height: 16.0),
+            // Horizontal scrollable row
+            SizedBox(
+              height: 120, // Further adjusted height to make it smaller
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: booksToShow.map((book) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookReadingScreen(book: book),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            color: Colors.transparent,
+                            width: 80, // Further adjusted width to match the smaller height
+                            height: 120, // Further adjusted height to match the smaller size
+                            child: book.coverImage ?? Center(child: Text('No Cover')),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle Recently Uploaded button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text('Recently Uploaded'),
-                ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
+          ],
           // Titles
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -93,14 +186,20 @@ class Home extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    // Handle View All button press
-                  },
-                  child: const Text(
-                    'View All',
-                    style: TextStyle(
-                      color: Colors.grey,
+                AnimatedOpacity(
+                  opacity: _isViewAllMode ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isViewAllMode = true;
+                      });
+                    },
+                    child: const Text(
+                      'View All',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -113,30 +212,42 @@ class Home extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GridView.builder(
+                controller: _scrollController,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 0.7,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: 10, // Replace with the actual number of books
+                itemCount: _books.length,
                 itemBuilder: (context, index) {
+                  final book = _books[index];
                   return GestureDetector(
                     onTap: () {
-                      _showBookDetails(context, 'Book Name $index', index);
+                      _showBookDetails(context, book);
                     },
                     child: Column(
                       children: [
-                        Container(
-                          color: Colors.grey[300],
-                          width: 145,
-                          height: 185,
-                          child: Center(
-                            child: Text('Book Image $index'),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(3.0),
+                          child: Container(
+                            color: Colors.grey[300],
+                            width: 145,
+                            height: 185,
+                            child: book.coverImage ?? Center(child: Text('No Cover')),
                           ),
                         ),
-                        const SizedBox(height: 8.0),
-                        Text('Book Name $index'),
+                        const SizedBox(height: 5.0),
+                        Text(
+                          book.title,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis, // This will add ellipsis (...) at the end if the text overflows
+                          maxLines: 1, // This will limit the text to one line
+                        ),
                       ],
                     ),
                   );
