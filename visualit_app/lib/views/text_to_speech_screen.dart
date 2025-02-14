@@ -1,13 +1,10 @@
 import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:epubx/epubx.dart' as epubx;
-import 'dart:io';
-import 'dart:convert'; // Import for base64Encode
-import 'package:image/image.dart' as img; // Alias for image package
-import 'package:http/http.dart' as http;
-import 'package:audioplayers/audioplayers.dart';
+import 'package:image/image.dart' as img;
 
 class AudiobookPage extends StatefulWidget {
   const AudiobookPage({super.key});
@@ -18,12 +15,13 @@ class AudiobookPage extends StatefulWidget {
 
 class _AudiobookPageState extends State<AudiobookPage> {
   final FlutterTts _flutterTts = FlutterTts();
-  final AudioPlayer _audioPlayer = AudioPlayer();
   List<String> _chapters = [];
   String _selectedChapterText = '';
   String? _bookName;
   MemoryImage? _bookCover;
   bool _isLoading = false;
+  bool _isPlaying = false;
+  double _speechRate = 0.5;
 
   @override
   void initState() {
@@ -32,170 +30,160 @@ class _AudiobookPageState extends State<AudiobookPage> {
   }
 
   void _initializeTts() {
-    _flutterTts.setStartHandler(() {
-      setState(() {
-        // TTS started
-      });
-    });
-
-    _flutterTts.setCompletionHandler(() {
-      setState(() {
-        // TTS completed
-      });
-    });
-
-    _flutterTts.setErrorHandler((msg) {
-      setState(() {
-        // TTS error
-      });
-    });
+    _flutterTts.setStartHandler(() => setState(() => _isPlaying = true));
+    _flutterTts.setCompletionHandler(() => setState(() => _isPlaying = false));
+    _flutterTts.setErrorHandler((_) => setState(() => _isPlaying = false));
   }
 
   Future<void> _pickFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['epub'],
+      );
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'epub'],
-    );
-
-    if (result != null) {
-      String? filePath = result.files.single.path;
-      if (filePath != null) {
-        if (filePath.endsWith('.pdf')) {
-          return;
-        } else if (filePath.endsWith('.epub')) {
-          await _extractChaptersFromEpub(filePath);
-        }
+      if (result != null && result.files.single.path != null) {
+        await _extractChaptersFromEpub(result.files.single.path!);
       }
+    } catch (e) {
+      _showError("Failed to load file.");
+    } finally {
+      setState(() => _isLoading = false);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Future<void> _extractChaptersFromEpub(String filePath) async {
-    epubx.EpubBook epubBook = await epubx.EpubReader.readBook(await File(filePath).readAsBytes());
-    List<String> chapters = epubBook.Chapters?.skip(1).map((chapter) => _filterText(chapter.HtmlContent ?? '')).toList() ?? [];
-    setState(() {
-      _chapters = chapters;
-      _bookName = epubBook.Title;
-      if (epubBook.CoverImage != null) {
-        // Convert the Image object to Uint8List
-        img.Image coverImage = epubBook.CoverImage!;
-        Uint8List coverBytes = Uint8List.fromList(img.encodePng(coverImage));
-        _bookCover = MemoryImage(coverBytes);
-      }
-    });
+    try {
+      epubx.EpubBook epubBook = await epubx.EpubReader.readBook(await File(filePath).readAsBytes());
+      List<String> chapters = epubBook.Chapters?.map((c) => _filterText(c.HtmlContent ?? '')).toList() ?? [];
+
+      setState(() {
+        _chapters = chapters;
+        _bookName = epubBook.Title;
+        if (epubBook.CoverImage != null) {
+          Uint8List coverBytes = Uint8List.fromList(img.encodePng(epubBook.CoverImage!));
+          _bookCover = MemoryImage(coverBytes);
+        }
+      });
+    } catch (e) {
+      _showError("Error reading EPUB file.");
+    }
   }
 
   String _filterText(String text) {
-    return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''); // Remove HTML tags and entities
+    return text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
   }
 
   Future<void> _speak(String text) async {
-    await _flutterTts.stop(); // Stop any ongoing speech
+    await _flutterTts.setSpeechRate(_speechRate);
     await _flutterTts.speak(text);
   }
-/*
-  Future<void> _fetchAndPlayTts(String text) async {
-    final response = await http.post(
-      Uri.parse('http://your-fastapi-backend-url/tts'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'text': text}),
-    );
-
-    if (response.statusCode == 200) {
-      final bytes = response.bodyBytes;
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/tts_audio.mp3');
-      await file.writeAsBytes(bytes);
-      await _audioPlayer.play(file.path, isLocal: true);
-    } else {
-      // Handle error
-    }
-  }
- */
 
   Future<void> _pause() async {
     await _flutterTts.pause();
-    await _audioPlayer.pause();
+    setState(() => _isPlaying = false);
   }
 
   Future<void> _stop() async {
     await _flutterTts.stop();
-    await _audioPlayer.stop();
+    setState(() => _isPlaying = false);
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
   @override
   void dispose() {
     _flutterTts.stop();
-    _audioPlayer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Audiobook Page'),
-      ),
+      appBar: AppBar(title: const Text('Audiobook Reader')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-              onPressed: _pickFile,
-              child: _bookName == null
-                  ? const Text('Pick PDF or EPUB File')
-                  : Row(
-                children: [
-                  if (_bookCover != null)
-                    Image(
-                      image: _bookCover!,
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  const SizedBox(width: 10),
-                  Text(_bookName!),
-                ],
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else
+              ElevatedButton(
+                onPressed: _pickFile,
+                child: _bookName == null
+                    ? const Text('Pick EPUB File')
+                    : Row(
+                  children: [
+                    if (_bookCover != null)
+                      Image(image: _bookCover!, width: 50, height: 50, fit: BoxFit.cover),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(_bookName!, overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
               ),
-            ),
+
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
+              child: _chapters.isEmpty
+                  ? const Center(child: Text("No chapters available."))
+                  : ListView.builder(
                 itemCount: _chapters.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Chapter ${index + 1}'),
-                    onTap: () {
-                      setState(() {
-                        _selectedChapterText = _chapters[index];
-                      });
-                      Future.microtask(() => _speak(_selectedChapterText));
-                    },
+                  return Card(
+                    child: ListTile(
+                      title: Text('Chapter ${index + 1}'),
+                      onTap: () {
+                        setState(() => _selectedChapterText = _chapters[index]);
+                        _speak(_selectedChapterText);
+                      },
+                    ),
                   );
                 },
               ),
             ),
-            const SizedBox(height: 20),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: _pause,
-                  child: const Text('Pause'),
+                  icon: const Icon(Icons.pause),
+                  label: const Text('Pause'),
                 ),
                 const SizedBox(width: 20),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: _stop,
-                  child: const Text('Stop'),
+                  icon: const Icon(Icons.stop),
+                  label: const Text('Stop'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Text('Speed:'),
+                Expanded(
+                  child: Slider(
+                    value: _speechRate,
+                    onChanged: (value) async {
+                      setState(() => _speechRate = value);
+                      await _flutterTts.setSpeechRate(value);
+                      if (_isPlaying) {
+                        await _speak(_selectedChapterText);
+                      }
+                    },
+                    min: 0.1,
+                    max: 1.0,
+                    divisions: 9,
+                    label: _speechRate.toStringAsFixed(1),
+                  ),
                 ),
               ],
             ),
