@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../core/models/book.dart';
+import 'font_settings_dialog.dart';
 
 class BookReadingScreen extends StatefulWidget {
   final Book book;
@@ -15,6 +18,25 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
   bool _showBars = true;
   int _currentChapterIndex = 0;
   PageController _pageController = PageController();
+  double _brightness = 1.0;
+  double _textSize = 16.0;
+  TextAlign _textAlign = TextAlign.left;
+  Color _themeColor = Colors.white;
+  double _margin = 10.0;
+  double _lineSpacing = 1.5;
+  String _font = 'Default';
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentChapterIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _toggleBars() {
     setState(() {
@@ -22,20 +44,69 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
     });
   }
 
-  void _showContextMenu(BuildContext context, Offset position) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    showMenu(
+  void _showFontSettingsDialog() {
+    setState(() {
+      _showBars = false;
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    });
+
+    showDialog(
       context: context,
-      position: RelativeRect.fromRect(
-        position & const Size(40, 40), // smaller rect, the touch area
-        Offset.zero & overlay.size, // Bigger rect, the entire screen
-      ),
-      items: [
-        const PopupMenuItem<int>(value: 0, child: Text('Option 1')),
-        const PopupMenuItem<int>(value: 1, child: Text('Option 2')),
-        const PopupMenuItem<int>(value: 2, child: Text('Option 3')),
-      ],
-    );
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: FontSettingsDialog(
+            initialTextSize: _textSize,
+            initialTextAlign: _textAlign,
+            initialMargin: _margin,
+            initialLineSpacing: _lineSpacing,
+            initialFont: _font,
+            onBrightnessChanged: (value) {
+              setState(() {
+                _brightness = value;
+              });
+            },
+            onTextSizeChanged: (value) {
+              setState(() {
+                _textSize = value;
+              });
+            },
+            onTextAlignChanged: (value) {
+              setState(() {
+                _textAlign = value;
+              });
+            },
+            onThemeColorChanged: (value) {
+              setState(() {
+                _themeColor = value;
+              });
+            },
+            onMarginChanged: (value) {
+              setState(() {
+                _margin = value;
+              });
+            },
+            onLineSpacingChanged: (value) {
+              setState(() {
+                _lineSpacing = value;
+              });
+            },
+            onFontChanged: (value) {
+              setState(() {
+                _font = value;
+              });
+            },
+          ),
+        );
+      },
+    ).then((_) {
+      setState(() {
+        _showBars = true;
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      });
+    });
   }
 
   @override
@@ -43,6 +114,7 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
     return Scaffold(
       appBar: _showBars
           ? AppBar(
+        backgroundColor: Colors.grey[200],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           iconSize: 20,
@@ -62,9 +134,7 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
           IconButton(
             icon: const Icon(Icons.font_download),
             iconSize: 20,
-            onPressed: () {
-              // Handle theme/font choosing action
-            },
+            onPressed: _showFontSettingsDialog,
           ),
           PopupMenuButton<int>(
             onSelected: (item) => onSelected(context, item),
@@ -88,14 +158,20 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
           },
           itemBuilder: (context, index) {
             final chapter = widget.book.chapters[index];
-            return Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: ListView(
-                children: [
-                  Html(
-                    data: chapter.htmlContent,
+            return Container(
+              color: Colors.white,
+              child: Html(
+                data: chapter.htmlContent,
+                style: {
+                  "body": Style(
+                    fontSize: FontSize(_textSize),
+                    textAlign: _textAlign,
+                    backgroundColor: Colors.white,
+                    lineHeight: LineHeight(_lineSpacing),
+                    fontFamily: _font,
+                    margin: Margins.all(_margin),
                   ),
-                ],
+                },
               ),
             );
           },
@@ -103,8 +179,9 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
       ),
       bottomNavigationBar: _showBars
           ? BottomAppBar(
+        color: Colors.grey[200],
         child: Container(
-          height: 40, // Set a fixed height for the bottom navigation bar
+          height: 40,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -130,13 +207,34 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
       )
           : null,
       floatingActionButton: _showBars
-          ? FloatingActionButton(
-        onPressed: () {
-          // Handle magic wand action
-        },
+          ? SpeedDial(
         backgroundColor: Colors.grey,
         foregroundColor: Colors.white,
-        child: const Icon(Icons.auto_fix_high),
+        icon: Icons.auto_fix_high,
+        activeIcon: Icons.close,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.search, color: Colors.white),
+            label: 'Look up',
+            onTap: () {
+              // Handle look up action
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.headset, color: Colors.white),
+            label: 'Listen',
+            onTap: () {
+              // Handle listen action
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.visibility, color: Colors.white),
+            label: 'Visualize',
+            onTap: () {
+              // Handle visualize action
+            },
+          ),
+        ],
       )
           : null,
     );
