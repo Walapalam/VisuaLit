@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:epubx/epubx.dart' as epubx;
-import 'package:image/image.dart' as img;
 
 class AudiobookPage extends StatefulWidget {
   const AudiobookPage({super.key});
