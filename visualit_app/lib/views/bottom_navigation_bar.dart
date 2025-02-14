@@ -35,7 +35,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
         ],
       ),
-navbar_and_settings
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       child: GNav(
         gap: 1.w,
@@ -61,7 +60,6 @@ navbar_and_settings
   GButton _buildTab(IconData icon, String label, bool isSelected) {
     return GButton(
       icon: icon,
-navbar_and_settings
       iconSize: isSelected ? 26.sp : 20.sp,
       text: label,
       textStyle: TextStyle(
