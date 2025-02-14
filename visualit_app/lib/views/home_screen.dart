@@ -6,7 +6,6 @@ import 'profile_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'VisuaLit_appBar.dart'; // Import the custom app bar
 import 'settings_page.dart';
-import 'audiobook_page.dart'; // Import the audiobook page
 
 void main() {
   runApp(const MyApp());
@@ -48,12 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     ProfileScreen(),
-    Text(
-      'Add New Book Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
     Home(),
-    AudiobookPage(), // Add the AudiobookPage widget
     SettingsPage(),
   ];
 

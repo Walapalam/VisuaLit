@@ -37,7 +37,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       child: GNav(
-        gap: 6.w,
+        gap: 1.w,
         activeColor: Colors.black,
         color: Colors.black.withOpacity(0.5),
         iconSize: 22.sp,
@@ -50,10 +50,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         onTabChange: onItemTapped,
         tabs: [
           _buildTab(CupertinoIcons.person, "Profile", selectedIndex == 0),
-          _buildTab(CupertinoIcons.add, "Add", selectedIndex == 1),
-          _buildTab(CupertinoIcons.home, "Home", selectedIndex == 2),
-          _buildTab(CupertinoIcons.music_note, "Audiobook", selectedIndex == 3),
-          _buildTab(CupertinoIcons.settings, "Settings", selectedIndex == 4),
+          _buildTab(CupertinoIcons.home, "Home", selectedIndex == 1),
+          _buildTab(CupertinoIcons.settings, "Settings", selectedIndex == 2),
         ],
       ),
     );
