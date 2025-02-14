@@ -55,12 +55,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _showBookDetails(BuildContext context, String bookName, int index) {
+  void _showBookDetails(BuildContext context, Book book) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return BookDetailsSheet(bookName: bookName, index: index);
+        return BookDetailsSheet(book: book);
       },
     );
   }
@@ -150,21 +150,19 @@ class _HomeState extends State<Home> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookReadingScreen(bookName: book.title),
+                            builder: (context) => BookReadingScreen(book: book),
                           ),
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Container(
-                            color: Colors.grey[300],
-                            width: 100, // Further adjusted width to match the smaller height
+                            color: Colors.transparent,
+                            width: 80, // Further adjusted width to match the smaller height
                             height: 120, // Further adjusted height to match the smaller size
-                            child: book.coverImage != null
-                                ? Image.memory(book.coverImage!.getBytes(), fit: BoxFit.cover)
-                                : Center(child: Text('No Cover')),
+                            child: book.coverImage ?? Center(child: Text('No Cover')),
                           ),
                         ),
                       ),
@@ -226,7 +224,7 @@ class _HomeState extends State<Home> {
                   final book = _books[index];
                   return GestureDetector(
                     onTap: () {
-                      _showBookDetails(context, book.title, index);
+                      _showBookDetails(context, book);
                     },
                     child: Column(
                       children: [
@@ -236,9 +234,7 @@ class _HomeState extends State<Home> {
                             color: Colors.grey[300],
                             width: 145,
                             height: 185,
-                            child: book.coverImage != null
-                                ? Image.memory(book.coverImage!.getBytes(), fit: BoxFit.cover)
-                                : Center(child: Text('No Cover')),
+                            child: book.coverImage ?? Center(child: Text('No Cover')),
                           ),
                         ),
                         const SizedBox(height: 5.0),

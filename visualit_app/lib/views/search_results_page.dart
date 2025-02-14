@@ -8,12 +8,12 @@ class SearchResultsPage extends StatelessWidget {
 
   const SearchResultsPage({super.key, required this.filteredBooks});
 
-  void _showBookDetails(BuildContext context, String bookName, int index) {
+  void _showBookDetails(BuildContext context, Book book) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return BookDetailsSheet(bookName: bookName, index: index);
+        return BookDetailsSheet(book: book);
       },
     );
   }
@@ -38,7 +38,7 @@ class SearchResultsPage extends StatelessWidget {
             final book = filteredBooks[index];
             return GestureDetector(
               onTap: () {
-                _showBookDetails(context, book.title, index);
+                _showBookDetails(context, book);
               },
               child: Column(
                 children: [
@@ -48,9 +48,7 @@ class SearchResultsPage extends StatelessWidget {
                       color: Colors.grey[300],
                       width: 145,
                       height: 185,
-                      child: book.coverImage != null
-                          ? Image.memory(book.coverImage!.getBytes(), fit: BoxFit.cover)
-                          : const Center(child: Text('No Cover')),
+                      child: book.coverImage ?? const Center(child: Text('No Cover')),
                     ),
                   ),
                 ],

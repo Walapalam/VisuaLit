@@ -20,11 +20,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, size: 28), // Drawer menu icon
-        onPressed: () {
-          Scaffold.of(context).openDrawer(); // Opens the DrawerMenu
-        },
+      leading: Padding(
+        padding: const EdgeInsets.only(top: 16.0), // Add padding on top
+        child: IconButton(
+          icon: const Icon(Icons.menu, size: 28), // Drawer menu icon
+          onPressed: () {
+            Scaffold.of(context).openDrawer(); // Opens the DrawerMenu
+          },
+        ),
       ),
     );
   }
