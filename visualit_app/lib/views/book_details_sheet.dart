@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../core/models/book.dart';
+import 'book_listening_screen.dart';
 import 'reading_screen.dart';
 
 class BookDetailsSheet extends StatelessWidget {
@@ -66,7 +67,12 @@ class BookDetailsSheet extends StatelessWidget {
                             const SizedBox(height: 8.0),
                             ElevatedButton.icon(
                               onPressed: () {
-                                // Handle start listening action
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BookListeningScreen(book: book, onClose: () => Navigator.pop(context)),
+                                  ),
+                                );
                               },
                               icon: const Icon(CupertinoIcons.headphones),
                               label: const Text('Start Listening'),
