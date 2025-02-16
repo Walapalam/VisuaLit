@@ -27,7 +27,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h), // Reduced padding
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h), // Reduced padding
       child: GNav(
         gap: 5.w, // Slightly reduced spacing
         activeColor: Colors.black,

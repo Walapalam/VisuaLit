@@ -1,10 +1,9 @@
-// lib/views/home.dart
 import 'package:flutter/material.dart';
 import '../core/services/book_loader.dart';
 import '../core/models/book.dart';
 import 'book_details_sheet.dart';
 import 'reading_screen.dart';
-import 'book_listening_screen.dart';
+import 'audiobook_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,10 +18,9 @@ class _HomeState extends State<Home> {
   List<Book> _recentlyUploadedBooks = [];
   bool _showMostViewed = true;
   bool _isViewAllMode = false;
-  bool _showListeningWidget = false; // New state for listening widget
-  Book? _currentListeningBook; // Track the currently playing book
+  bool _showListeningWidget = false; // Controls the draggable widget visibility
+  Book? _currentListeningBook; // Tracks the current playing book
   final ScrollController _scrollController = ScrollController();
-
 
   @override
   void initState() {
@@ -52,26 +50,19 @@ class _HomeState extends State<Home> {
     });
   }
 
-
   Future<void> _loadBooks() async {
     List<Book> books = await loadBooks();
     setState(() {
       _books = books;
-      _mostViewedBooks = books; // Replace with actual logic to get most viewed books
-      _recentlyUploadedBooks = books; // Replace with actual logic to get recently uploaded books
+      _mostViewedBooks = books; // Replace with logic to get most viewed books
+      _recentlyUploadedBooks = books; // Replace with logic for recent books
     });
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels > 50) {
-      setState(() {
-        _isViewAllMode = true;
-      });
-    } else {
-      setState(() {
-        _isViewAllMode = false;
-      });
-    }
+    setState(() {
+      _isViewAllMode = _scrollController.position.pixels > 50;
+    });
   }
 
   void _showBookDetails(BuildContext context, Book book) {
@@ -102,7 +93,6 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (!_isViewAllMode) ...[
-                // Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Stack(
@@ -122,17 +112,13 @@ class _HomeState extends State<Home> {
                         bottom: 0,
                         child: IconButton(
                           icon: Icon(Icons.tune),
-                          onPressed: () {
-                            // Handle tweaking icon press
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16.0),
-
-                // Buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
@@ -166,8 +152,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-
-                // Horizontal Scrollable Row
                 SizedBox(
                   height: 120,
                   child: SingleChildScrollView(
@@ -202,43 +186,6 @@ class _HomeState extends State<Home> {
                 ),
                 const SizedBox(height: 16.0),
               ],
-
-              // Title
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Text(
-                      'Your Books',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    AnimatedOpacity(
-                      opacity: _isViewAllMode ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 300),
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _isViewAllMode = true;
-                          });
-                        },
-                        child: const Text(
-                          'View All',
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16.0),
-
-              // Books Grid
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -271,10 +218,7 @@ class _HomeState extends State<Home> {
                             const SizedBox(height: 5.0),
                             Text(
                               book.title,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -290,53 +234,13 @@ class _HomeState extends State<Home> {
           ),
         ),
 
-        // Listening Widget
-        if (_showListeningWidget && _currentListeningBook != null)
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookListeningScreen(
-                      book: _currentListeningBook!,
-                      onClose: _hideListeningWidget,
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _currentListeningBook!.coverImage ?? Icon(Icons.book, color: Colors.white),
-                    ),
-                    Expanded(
-                      child: Text(
-                        _currentListeningBook!.title,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.pause, color: Colors.white),
-                      onPressed: _hideListeningWidget,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        // Draggable Listening Widget
+    // Listening Widget - Rectangular and Draggable
+    if (_showListeningWidget && _currentListeningBook != null)
+    ListeningWidget(
+    currentBook: _currentListeningBook,
+    onClose: _hideListeningWidget,
+    ),
       ],
     );
   }

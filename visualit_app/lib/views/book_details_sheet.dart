@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../core/models/book.dart';
-import 'book_listening_screen.dart';
 import 'reading_screen.dart';
 
 class BookDetailsSheet extends StatelessWidget {
