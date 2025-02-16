@@ -13,10 +13,17 @@ class SearchResultsPage extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return BookDetailsSheet(book: book);
+        return BookDetailsSheet(
+          book: book,
+          onStartListening: () {
+            // Implement your start listening logic here
+            print('Listening to ${book.title}');
+          },
+        );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

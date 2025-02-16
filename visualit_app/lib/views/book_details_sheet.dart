@@ -6,8 +6,9 @@ import 'reading_screen.dart';
 
 class BookDetailsSheet extends StatelessWidget {
   final Book book;
+  final VoidCallback onStartListening; // Add this
 
-  const BookDetailsSheet({super.key, required this.book});
+  const BookDetailsSheet({super.key, required this.book, required this.onStartListening});
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +67,7 @@ class BookDetailsSheet extends StatelessWidget {
                             ),
                             const SizedBox(height: 8.0),
                             ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookListeningScreen(book: book, onClose: () => Navigator.pop(context)),
-                                  ),
-                                );
-                              },
+                              onPressed: onStartListening, // Use the callback here
                               icon: const Icon(CupertinoIcons.headphones),
                               label: const Text('Start Listening'),
                             ),

@@ -46,7 +46,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   final PageController _pageController = PageController(initialPage: 1);
 
   static const List<Widget> _widgetOptions = <Widget>[
