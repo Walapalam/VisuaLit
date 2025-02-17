@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../core/models/book.dart';
+import '../core/models/book_metadata.dart';
+import '../core/services/epub_service.dart';
+import 'font_settings_dialog.dart';
 
 class BookReadingScreen extends StatefulWidget {
-  final Book book;
+  final BookMetadata bookMetadata;
 
-  const BookReadingScreen({super.key, required this.book});
+  const BookReadingScreen({super.key, required this.bookMetadata});
 
   @override
   _BookReadingScreenState createState() => _BookReadingScreenState();
 }
 
 class _BookReadingScreenState extends State<BookReadingScreen> {
+  late Future<Book> _bookFuture;
+  final EpubService _epubService = EpubService();
   bool _showBars = true;
   int _currentChapterIndex = 0;
-  PageController _pageController = PageController();
+  late PageController _pageController;
+  double _brightness = 1.0;
+  double _textSize = 16.0;
+  TextAlign _textAlign = TextAlign.left;
+  Color _themeColor = Colors.white;
+  double _margin = 10.0;
+  double _lineSpacing = 1.5;
+  String _font = 'Default';
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentChapterIndex);
+    _bookFuture = _epubService.loadBook(widget.bookMetadata.filePath);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _toggleBars() {
     setState(() {
@@ -22,123 +49,219 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
     });
   }
 
-  void _showContextMenu(BuildContext context, Offset position) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    showMenu(
+  void _showFontSettingsDialog() {
+    setState(() {
+      _showBars = false;
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    });
+
+    showDialog(
       context: context,
-      position: RelativeRect.fromRect(
-        position & const Size(40, 40), // smaller rect, the touch area
-        Offset.zero & overlay.size, // Bigger rect, the entire screen
-      ),
-      items: [
-        const PopupMenuItem<int>(value: 0, child: Text('Option 1')),
-        const PopupMenuItem<int>(value: 1, child: Text('Option 2')),
-        const PopupMenuItem<int>(value: 2, child: Text('Option 3')),
-      ],
-    );
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: FontSettingsDialog(
+            initialTextSize: _textSize,
+            initialTextAlign: _textAlign,
+            initialMargin: _margin,
+            initialLineSpacing: _lineSpacing,
+            initialFont: _font,
+            onBrightnessChanged: (value) {
+              setState(() {
+                _brightness = value;
+              });
+            },
+            onTextSizeChanged: (value) {
+              setState(() {
+                _textSize = value;
+              });
+            },
+            onTextAlignChanged: (value) {
+              setState(() {
+                _textAlign = value;
+              });
+            },
+            onThemeColorChanged: (value) {
+              setState(() {
+                _themeColor = value;
+              });
+            },
+            onMarginChanged: (value) {
+              setState(() {
+                _margin = value;
+              });
+            },
+            onLineSpacingChanged: (value) {
+              setState(() {
+                _lineSpacing = value;
+              });
+            },
+            onFontChanged: (value) {
+              setState(() {
+                _font = value;
+              });
+            },
+          ),
+        );
+      },
+    ).then((_) {
+      setState(() {
+        _showBars = true;
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _showBars
-          ? AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          iconSize: 20,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(widget.book.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            iconSize: 20,
-            onPressed: () {
-              // Handle search action
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.font_download),
-            iconSize: 20,
-            onPressed: () {
-              // Handle theme/font choosing action
-            },
-          ),
-          PopupMenuButton<int>(
-            onSelected: (item) => onSelected(context, item),
-            itemBuilder: (context) => [
-              const PopupMenuItem<int>(value: 0, child: Text('Option 1')),
-              const PopupMenuItem<int>(value: 1, child: Text('Option 2')),
+    return FutureBuilder<Book>(
+      future: _bookFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData) {
+          return const Center(child: Text('No data available'));
+        }
+
+        final book = snapshot.data!;
+
+        return Scaffold(
+          appBar: _showBars
+              ? AppBar(
+            backgroundColor: Colors.grey[200],
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              iconSize: 20,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(widget.bookMetadata.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                iconSize: 20,
+                onPressed: () {
+                  // Handle search action
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.font_download),
+                iconSize: 20,
+                onPressed: _showFontSettingsDialog,
+              ),
+              PopupMenuButton<int>(
+                onSelected: (item) => onSelected(context, item),
+                itemBuilder: (context) => [
+                  const PopupMenuItem<int>(value: 0, child: Text('Option 1')),
+                  const PopupMenuItem<int>(value: 1, child: Text('Option 2')),
+                ],
+              ),
             ],
+          )
+              : null,
+          body: PageView.builder(
+            controller: _pageController,
+            itemCount: book.chapters.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentChapterIndex = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final chapter = book.chapters[index];
+              return Container(
+                color: Colors.white,
+                child: GestureDetector(
+                  onTap: _toggleBars,
+                  behavior: HitTestBehavior.opaque,
+                  child: SingleChildScrollView(
+                    child: Html(
+                      data: chapter.htmlContent,
+                      style: {
+                        "body": Style(
+                          fontSize: FontSize(_textSize),
+                          textAlign: _textAlign,
+                          backgroundColor: Colors.white,
+                          lineHeight: LineHeight(_lineSpacing),
+                          fontFamily: _font,
+                          margin: Margins.symmetric(horizontal: _margin),
+                        ),
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
-      )
-          : null,
-      body: GestureDetector(
-        onTap: _toggleBars,
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: widget.book.chapters.length,
-          onPageChanged: (index) {
-            setState(() {
-              _currentChapterIndex = index;
-            });
-          },
-          itemBuilder: (context, index) {
-            final chapter = widget.book.chapters[index];
-            return Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: ListView(
+          bottomNavigationBar: _showBars
+              ? BottomAppBar(
+            color: Colors.grey[200],
+            child: SizedBox(
+              height: 40,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Html(
-                    data: chapter.htmlContent,
+                  Text('Chapter ${_currentChapterIndex + 1} of ${book.chapters.length}'),
+                  Expanded(
+                    child: Slider(
+                      value: _currentChapterIndex.toDouble(),
+                      min: 0,
+                      max: (book.chapters.length - 1).toDouble(),
+                      activeColor: Colors.black,
+                      inactiveColor: Colors.grey,
+                      onChanged: (value) {
+                        setState(() {
+                          _currentChapterIndex = value.toInt();
+                          _pageController.jumpToPage(_currentChapterIndex);
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
-            );
-          },
-        ),
-      ),
-      bottomNavigationBar: _showBars
-          ? BottomAppBar(
-        child: Container(
-          height: 40, // Set a fixed height for the bottom navigation bar
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+            ),
+          )
+              : null,
+          floatingActionButton: _showBars
+              ? SpeedDial(
+            backgroundColor: Colors.grey,
+            foregroundColor: Colors.white,
+            icon: Icons.auto_fix_high,
+            activeIcon: Icons.close,
             children: [
-              Text('Chapter ${_currentChapterIndex + 1} of ${widget.book.chapters.length}'),
-              Expanded(
-                child: Slider(
-                  value: _currentChapterIndex.toDouble(),
-                  min: 0,
-                  max: (widget.book.chapters.length - 1).toDouble(),
-                  activeColor: Colors.black,
-                  inactiveColor: Colors.grey,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentChapterIndex = value.toInt();
-                      _pageController.jumpToPage(_currentChapterIndex);
-                    });
-                  },
-                ),
+              SpeedDialChild(
+                child: const Icon(Icons.search, color: Colors.white),
+                label: 'Look up',
+                onTap: () {
+                  // Handle look up action
+                },
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.headset, color: Colors.white),
+                label: 'Listen',
+                onTap: () {
+                  // Handle listen action
+                },
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.visibility, color: Colors.white),
+                label: 'Visualize',
+                onTap: () {
+                  // Handle visualize action
+                },
               ),
             ],
-          ),
-        ),
-      )
-          : null,
-      floatingActionButton: _showBars
-          ? FloatingActionButton(
-        onPressed: () {
-          // Handle magic wand action
-        },
-        backgroundColor: Colors.grey,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.auto_fix_high),
-      )
-          : null,
+          )
+              : null,
+        );
+      },
     );
   }
 
