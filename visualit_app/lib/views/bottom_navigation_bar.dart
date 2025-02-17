@@ -17,33 +17,25 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFF0F0F0), Color(0xFFDEDEDE)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(15.r),
-          bottomRight: Radius.circular(15.r),
-        ),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.15),
-            blurRadius: 10.r,
-            spreadRadius: 2.r,
-            offset: Offset(0, -3.h),
+            blurRadius: 6.r, // Reduced blur for subtle effect
+            spreadRadius: 1.5.r, // Slightly smaller spread
+            offset: Offset(0, -1.5.h), // Reduced shadow height
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h), // Reduced padding
       child: GNav(
-        gap: 1.w,
+        gap: 5.w, // Slightly reduced spacing
         activeColor: Colors.black,
-        color: Colors.black.withOpacity(0.5),
-        iconSize: 22.sp,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        color: Colors.black.withOpacity(0.6),
+        iconSize: 22.sp, // Reduced icon size by 1-2 sp
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h), // Smaller button padding
         duration: const Duration(milliseconds: 300),
-        tabBackgroundColor: Colors.white.withOpacity(0.5),
+        tabBackgroundColor: Colors.black.withOpacity(0.1),
         curve: Curves.easeInOut,
         rippleColor: Colors.black12,
         selectedIndex: selectedIndex,
@@ -60,11 +52,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
   GButton _buildTab(IconData icon, String label, bool isSelected) {
     return GButton(
       icon: icon,
-      iconSize: isSelected ? 26.sp : 20.sp,
+      iconSize: isSelected ? 26.sp : 20.sp, // Reduced both selected and default sizes
       text: label,
       textStyle: TextStyle(
-        fontSize: 13.sp,
-        fontWeight: FontWeight.w500,
+        fontSize: 13.sp, // Reduced text size slightly
+        fontWeight: FontWeight.w600,
         color: isSelected ? Colors.black : Colors.grey.shade700,
       ),
     );

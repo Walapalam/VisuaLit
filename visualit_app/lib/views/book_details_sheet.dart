@@ -174,7 +174,16 @@ class _BookDetailsSheetState extends State<BookDetailsSheet> {
                                   height: 100,
                                   child: image,
                                 );
-                              }).toList(),
+                              },
+                              icon: const Icon(CupertinoIcons.book),
+                              label: const Text('Start Reading'),
+                            ),
+                            const SizedBox(height: 8.0),
+                            ElevatedButton.icon(
+                              onPressed: onStartListening, // Use the callback here
+                              icon: const Icon(CupertinoIcons.headphones),
+                              label: const Text('Start Listening'),
+                              //}).toList(),
                             ),
                           ],
                         ),
