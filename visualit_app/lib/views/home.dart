@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:visualit_app/core/services/epub_service.dart';
 import '../core/services/book_loader.dart';
 import '../core/models/book.dart';
@@ -190,8 +191,8 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 16.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SizedBox(
-                    height: 120,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(

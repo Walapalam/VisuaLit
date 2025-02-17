@@ -46,6 +46,14 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
   void _toggleBars() {
     setState(() {
       _showBars = !_showBars;
+
+      /*
+      if (_showBars){
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      } else if (!_showBars) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      }
+      */
     });
   }
 
