@@ -7,7 +7,11 @@ import 'package:image/image.dart' as img;
 class Book {
   final epubx.EpubBook epubBook;
 
-  Book(epubx.EpubBook? epubBook) : epubBook = epubBook ?? epubx.EpubBook();
+  var filepath;
+
+  //Book(epubx.EpubBook? epubBook) : epubBook = epubBook ?? epubx.EpubBook();
+
+  Book(this.epubBook, this.filepath);
 
   String get title => epubBook.Title ?? "";
   String get author => epubBook.Author ?? "";

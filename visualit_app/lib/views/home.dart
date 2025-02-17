@@ -1,9 +1,12 @@
 // lib/views/home.dart
 import 'package:flutter/material.dart';
+import 'package:visualit_app/core/services/epub_service.dart';
 import '../core/services/book_loader.dart';
 import '../core/models/book.dart';
 import 'book_details_sheet.dart';
 import 'reading_screen.dart';
+import '../core/models/book_metadata.dart';
+import '../core/services/book_cache.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,12 +16,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Book> _books = [];
-  List<Book> _mostViewedBooks = [];
-  List<Book> _recentlyUploadedBooks = [];
+  List<BookMetadata> _books = [];
+  List<BookMetadata> _mostViewedBooks = [];
+  List<BookMetadata> _recentlyUploadedBooks = [];
   bool _showMostViewed = true;
   bool _isViewAllMode = false;
   final ScrollController _scrollController = ScrollController();
+  final BookCache _bookCache = BookCache();
+  final EpubService _epubService = EpubService();
 
   @override
   void initState() {
@@ -35,11 +40,19 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadBooks() async {
-    List<Book> books = await loadBooks();
+    // Load cached metadata
+    List<BookMetadata> books = await _bookCache.loadCachedBooks();
+
+    if (books.isEmpty) {
+      // If cache is empty, create it
+      await _bookCache.cacheBooks();
+      books = await _bookCache.loadCachedBooks();
+    }
+
     setState(() {
       _books = books;
-      _mostViewedBooks = books; // Replace with actual logic to get most viewed books
-      _recentlyUploadedBooks = books; // Replace with actual logic to get recently uploaded books
+      _mostViewedBooks = books;
+      _recentlyUploadedBooks = books;
     });
   }
 
@@ -55,19 +68,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _showBookDetails(BuildContext context, Book book) {
+  void _showBookDetails(BuildContext context, BookMetadata book) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return BookDetailsSheet(book: book);
+        return BookDetailsSheet(bookMetadata: book,);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Book> booksToShow = _showMostViewed ? _mostViewedBooks : _recentlyUploadedBooks;
+    List<BookMetadata> booksToShow = _showMostViewed ? _mostViewedBooks : _recentlyUploadedBooks;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -150,7 +163,7 @@ class _HomeState extends State<Home> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookReadingScreen(book: book),
+                            builder: (context) => BookReadingScreen(bookMetadata: book),
                           ),
                         );
                       },

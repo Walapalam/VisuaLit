@@ -22,7 +22,7 @@ Future<List<Book>> loadBooks() async {
       epubx.EpubBook epubBook = await epubx.EpubReader.readBook(bytes);
 
       // Create a Book instance using the epubBook
-      books.add(Book(epubBook));
+      books.add(Book(epubBook, path));
     } catch (e) {
       print('Error parsing EPUB file: $e');
     }
