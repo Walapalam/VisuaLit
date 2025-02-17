@@ -66,8 +66,8 @@ class ListeningWidget extends StatelessWidget {
       isScrollControlled: true, // Makes it full-screen height
       backgroundColor: Colors.transparent, // Optional for smooth look
       builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.87, // Starts fully expanded
-        minChildSize: 0.87, // Prevents resizing
+        initialChildSize: 1, // Starts fully expanded
+        minChildSize: 1, // Prevents resizing
         builder: (_, controller) => BookListeningScreen(
           book: currentBook!,
           onClose: onClose,

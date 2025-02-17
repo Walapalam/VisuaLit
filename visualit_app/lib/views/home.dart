@@ -186,6 +186,35 @@ class _HomeState extends State<Home> {
                 ),
                 const SizedBox(height: 16.0),
               ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  const Text(
+                    'Your Books',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  AnimatedOpacity(
+                    opacity: _isViewAllMode ? 0.0 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isViewAllMode = true;
+                        });
+                      },
+                      child: const Text(
+                        'View All',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
