@@ -9,6 +9,7 @@ import 'profile_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'VisuaLit_appBar.dart'; // Import the custom app bar
 import 'settings_page.dart';
+import 'text_to_speech_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,7 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
     ProfileScreen(),
     Home(),
     SettingsPage(),
-
+    AudiobookPage(),
+    Text(
+      'Settings Page',
+      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+    ),
   ];
 
   void _onItemTapped(int index) {
