@@ -146,36 +146,39 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
         ],
       )
           : null,
-      body: GestureDetector(
-        onTap: _toggleBars,
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: widget.book.chapters.length,
-          onPageChanged: (index) {
-            setState(() {
-              _currentChapterIndex = index;
-            });
-          },
-          itemBuilder: (context, index) {
-            final chapter = widget.book.chapters[index];
-            return Container(
-              color: Colors.white,
-              child: Html(
-                data: chapter.htmlContent,
-                style: {
-                  "body": Style(
-                    fontSize: FontSize(_textSize),
-                    textAlign: _textAlign,
-                    backgroundColor: Colors.white,
-                    lineHeight: LineHeight(_lineSpacing),
-                    fontFamily: _font,
-                    margin: Margins.all(_margin),
-                  ),
-                },
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.book.chapters.length,
+        onPageChanged: (index) {
+          setState(() {
+            _currentChapterIndex = index;
+          });
+        },
+        itemBuilder: (context, index) {
+          final chapter = widget.book.chapters[index];
+          return Container(
+            color: Colors.white,
+            child: GestureDetector(
+              onTap: _toggleBars,
+              behavior: HitTestBehavior.opaque,
+              child: SingleChildScrollView(
+                child: Html(
+                  data: chapter.htmlContent,
+                  style: {
+                    "body": Style(
+                      fontSize: FontSize(_textSize),
+                      textAlign: _textAlign,
+                      backgroundColor: Colors.white,
+                      lineHeight: LineHeight(_lineSpacing),
+                      fontFamily: _font,
+                      margin: Margins.only(left: _margin, right: _margin)
+                    ),
+                  },
+                ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
       bottomNavigationBar: _showBars
           ? BottomAppBar(
