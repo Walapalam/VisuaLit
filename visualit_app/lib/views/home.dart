@@ -78,16 +78,17 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void _showBookDetails(BuildContext context, BookMetadata book) {
+  void _showBookDetails(BuildContext context, BookMetadata bookMetadata) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return BookDetailsSheet(
-            bookMetadata: book,
-            onStartListening: () {
-              _toggleListeningWidget(book);
-              Navigator.pop(context);
+          bookMetadata: bookMetadata,
+          onStartListening: () async {
+            Book book = await _epubService.loadBook(bookMetadata.filePath);
+            _toggleListeningWidget(book);
+            Navigator.pop(context);
           },
         );
       },
@@ -176,7 +177,7 @@ class _HomeState extends State<Home> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => BookReadingScreen(book: book),
+                                builder: (context) => BookReadingScreen(bookMetadata: book),
                               ),
                             );
                           },
@@ -277,12 +278,11 @@ class _HomeState extends State<Home> {
         ),
 
         // Draggable Listening Widget
-    // Listening Widget - Rectangular and Draggable
-    if (_showListeningWidget && _currentListeningBook != null)
-    ListeningWidget(
-    currentBook: _currentListeningBook,
-    onClose: _hideListeningWidget,
-    ),
+        if (_showListeningWidget && _currentListeningBook != null)
+          ListeningWidget(
+            currentBook: _currentListeningBook,
+            onClose: _hideListeningWidget,
+          ),
       ],
     );
   }

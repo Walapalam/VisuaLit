@@ -7,8 +7,9 @@ import 'reading_screen.dart';
 
 class BookDetailsSheet extends StatefulWidget {
   final BookMetadata bookMetadata;
+  final VoidCallback onStartListening; // Add this line
 
-  const BookDetailsSheet({super.key, required this.bookMetadata});
+  const BookDetailsSheet({super.key, required this.bookMetadata, required this.onStartListening});
 
   @override
   State<BookDetailsSheet> createState() => _BookDetailsSheetState();
@@ -98,9 +99,7 @@ class _BookDetailsSheetState extends State<BookDetailsSheet> {
                                 ),
                                 const SizedBox(height: 8.0),
                                 ElevatedButton.icon(
-                                  onPressed: () {
-                                    // Handle start listening action
-                                  },
+                                  onPressed: widget.onStartListening, // Use the callback here
                                   icon: const Icon(CupertinoIcons.headphones),
                                   label: const Text('Start Listening'),
                                 ),
@@ -174,16 +173,7 @@ class _BookDetailsSheetState extends State<BookDetailsSheet> {
                                   height: 100,
                                   child: image,
                                 );
-                              },
-                              icon: const Icon(CupertinoIcons.book),
-                              label: const Text('Start Reading'),
-                            ),
-                            const SizedBox(height: 8.0),
-                            ElevatedButton.icon(
-                              onPressed: onStartListening, // Use the callback here
-                              icon: const Icon(CupertinoIcons.headphones),
-                              label: const Text('Start Listening'),
-                              //}).toList(),
+                              }).toList(),
                             ),
                           ],
                         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/models/book.dart';
-import 'package:html/parser.dart' as htmlParser;
+import 'package:flutter_html/flutter_html.dart';
 import 'listening_screen_nav_bar_page.dart';
 
 class AudioBookReadingPage extends StatelessWidget {
@@ -17,43 +17,59 @@ class AudioBookReadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure the chapter index is within valid range
+    if (currentChapterIndex < 0 || currentChapterIndex >= book.chapters.length) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Chapter Not Found"),
+          backgroundColor: Colors.white,
+          elevation: 2,
+        ),
+        body: const Center(
+          child: Text(
+            "Oops! The chapter couldn't be found.",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }
+
     final chapter = book.chapters[currentChapterIndex];
-    final document = htmlParser.parse(chapter.htmlContent);
-    final plainText = document.body?.text ?? '';
 
     return Scaffold(
-      backgroundColor: Colors.white, // White background for a clean look
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           chapter.title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.black, // Black text for contrast
+            color: Colors.black,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 2,
         shadowColor: Colors.black26,
-        iconTheme: const IconThemeData(color: Colors.black), // Black icons
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Text(
-                plainText,
-                style: const TextStyle(
-                  fontSize: 18,
-                  height: 1.8,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black, // Black text for readability
-                  letterSpacing: 0.4, // Slight spacing for better reading
-                ),
-                textAlign: TextAlign.justify,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: Html(
+                data: chapter.htmlContent, // Directly render HTML content
+                style: {
+                  "body": Style(
+                    fontSize: FontSize(18),
+                    lineHeight: LineHeight.number(1.8),
+                    textAlign: TextAlign.justify,
+                    padding: HtmlPaddings.zero,
+                    margin: Margins.zero,
+                  ),
+                },
               ),
             ),
           ),

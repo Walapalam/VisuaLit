@@ -21,7 +21,7 @@ class _BookListeningScreenState extends State<BookListeningScreen> {
   bool isPlaying = false;
   bool isLooping = false;
   int currentChapterIndex = 0;
-  double _speechRate = 1.0;
+  double _speechRate = 0.1;
   int _selectedIndex = 0;
   double _currentPosition = 0.0;
   double _chapterDuration = 10.0;
@@ -111,14 +111,26 @@ class _BookListeningScreenState extends State<BookListeningScreen> {
     _loadChapter(); // Recalculate duration with new speech rate
   }
 
+  bool _isBottomSheetOpen = false; // Track if modal is open
+
   void _onNavBarItemTapped(int index) {
+    if (_isBottomSheetOpen) return; // Prevent opening multiple times
+
     setState(() {
       _selectedIndex = index;
       if (index == 1) { // Lyrics option
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AudioBookReadingPage(
+        _isBottomSheetOpen = true; // Set flag to true
+
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          builder: (context) => SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: AudioBookReadingPage(
               book: widget.book,
               currentChapterIndex: currentChapterIndex,
               navBar: ListeningScreenNavBar(
@@ -127,10 +139,14 @@ class _BookListeningScreenState extends State<BookListeningScreen> {
               ),
             ),
           ),
-        );
+        ).whenComplete(() {
+          _isBottomSheetOpen = false; // Reset flag when closed
+        });
       }
     });
   }
+
+
 
   @override
   void dispose() {

@@ -32,11 +32,11 @@ class ListeningScreenNavBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: SizedBox.shrink(),
-          label: 'Lyrics',
+          label: 'Read',
         ),
         BottomNavigationBarItem(
           icon: SizedBox.shrink(),
-          label: 'Related',
+          label: 'Visualize',
         ),
       ],
     );
