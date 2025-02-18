@@ -60,7 +60,7 @@ class _BookReadingScreenState extends State<BookReadingScreen> {
   void _showFontSettingsDialog() {
     setState(() {
       _showBars = false;
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // Hides the bottom nav bar on home
     });
 
     showDialog(
