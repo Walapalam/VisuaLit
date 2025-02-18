@@ -213,7 +213,7 @@ class _BookListeningScreenState extends State<BookListeningScreen> {
                   value: _speechRate,
                   items: [
                     DropdownMenuItem(value: 0.5, child: Text("0.5x")),
-                    DropdownMenuItem(value: 1.0, child: Text("1.0x")),
+                    DropdownMenuItem(value: 0.1, child: Text("1.0x")),
                     DropdownMenuItem(value: 1.5, child: Text("1.5x")),
                     DropdownMenuItem(value: 2.0, child: Text("2.0x")),
                   ],
