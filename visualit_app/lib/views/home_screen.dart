@@ -54,11 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ProfileScreen(),
     Home(),
     SettingsPage(),
-    AudiobookPage(),
-    Text(
-      'Settings Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
   ];
 
   void _onItemTapped(int index) {
