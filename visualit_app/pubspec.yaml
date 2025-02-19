@@ -67,6 +67,8 @@ flutter:
     - assets/ebooks/
     - assets/ebooks/Harry_Potter_and_the_Prisoner_of_Azkaban_Harry_Potter_3.epub
     - assets/visualit.png
+    - assets/google_signin.png
+    - assets/google_signup.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

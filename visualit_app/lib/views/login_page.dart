@@ -199,6 +199,48 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 1,
+                    width: 100,
+                    color: Colors.white54,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Or',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 1,
+                    width: 100,
+                    color: Colors.white54,
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () {
+                  // Handle Google sign in
+                },
+                icon: Image.asset(
+                  'assets/google_signin.png',
+                  height: 24,
+                ),
+                padding: EdgeInsets.all(12),
+                style: IconButton.styleFrom(
+                  side: BorderSide(color: Colors.white54),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              )
             ],
           ),
         ),
