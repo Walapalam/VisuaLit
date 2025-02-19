@@ -49,9 +49,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         selectedIndex: selectedIndex,
         onTabChange: onItemTapped,
         tabs: [
-          _buildTab(CupertinoIcons.person, "Profile", selectedIndex == 0),
-          _buildTab(CupertinoIcons.home, "Home", selectedIndex == 1),
-          _buildTab(CupertinoIcons.settings, "Settings", selectedIndex == 2),
+          _buildTab(CupertinoIcons.person, "  Profile", selectedIndex == 0),
+          _buildTab(CupertinoIcons.home, "   Home", selectedIndex == 1),
+          _buildTab(CupertinoIcons.settings, "  Settings", selectedIndex == 2),
         ],
       ),
     );
