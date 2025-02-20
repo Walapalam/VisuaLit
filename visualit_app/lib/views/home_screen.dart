@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 1);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    ProfileScreen(),
+    ProfilePage(), // Updated to use ProfilePage
     Home(),
     SettingsPage(),
   ];
