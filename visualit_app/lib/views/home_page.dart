@@ -6,7 +6,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -15,18 +15,9 @@ class HomePage extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/visualit.png',
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.5,
                 fit: BoxFit.contain,
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Bring stories to life',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  letterSpacing: 0.5,
-                ),
               ),
               SizedBox(height: 50),
               SizedBox(
@@ -39,8 +30,8 @@ class HomePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -55,7 +46,7 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                   'or',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  style: TextStyle(color: Colors.black, fontSize: 14),
                 ),
               ),
               SizedBox(
@@ -69,14 +60,14 @@ class HomePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
-                    'Login',
+                    'Continue with login',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

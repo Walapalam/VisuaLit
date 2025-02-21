@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'forget_password_page.dart';
 import 'home_screen.dart';
 import 'signup_page.dart';
-import 'forget_password_page.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -23,8 +25,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // Here you would typically handle authentication
-      // For now, just navigate to HomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -35,11 +35,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -53,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               Text(
                 'Login',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black87,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
@@ -61,16 +62,16 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40),
               TextFormField(
                 controller: _emailController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black87),
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black26),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black87),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -98,11 +99,11 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       'Forgot Password?',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -112,17 +113,17 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black87),
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black26),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black87),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -132,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.white70,
+                      color: Colors.black54,
                     ),
                     onPressed: () {
                       setState(() {
@@ -158,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: _handleLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.black87,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -177,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     "Don't have an account! ",
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: Colors.black54,
                       fontSize: 14,
                     ),
                   ),
@@ -191,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       "Signup",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black87,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
@@ -206,14 +207,14 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     height: 1,
                     width: 100,
-                    color: Colors.white54,
+                    color: Colors.black26,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Or',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -221,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     height: 1,
                     width: 100,
-                    color: Colors.white54,
+                    color: Colors.black26,
                   ),
                 ],
               ),
@@ -234,12 +235,6 @@ class _LoginPageState extends State<LoginPage> {
                   height: 24,
                 ),
                 padding: EdgeInsets.all(12),
-                style: IconButton.styleFrom(
-                  side: BorderSide(color: Colors.white54),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
               )
             ],
           ),

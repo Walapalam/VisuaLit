@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Netflix theme
+      backgroundColor: Colors.white,
       body: Center(
         child: AnimatedOpacity(
           duration: Duration(seconds: 1),

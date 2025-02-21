@@ -39,11 +39,11 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -56,7 +56,7 @@ class _SignupPageState extends State<SignupPage> {
               Text(
                 'Create Account',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
@@ -64,16 +64,16 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(height: 40),
               TextFormField(
                 controller: _firstNameController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'First Name',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -91,16 +91,16 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _lastNameController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'Last Name',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -118,16 +118,16 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -148,17 +148,17 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -168,7 +168,7 @@ class _SignupPageState extends State<SignupPage> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.white70,
+                      color: Colors.black54,
                     ),
                     onPressed: () {
                       setState(() {
@@ -190,17 +190,17 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(height: 20),
               TextFormField(
                 controller: _confirmPasswordController,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
                 obscureText: !_isConfirmPasswordVisible,
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white54),
+                    borderSide: BorderSide(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -210,7 +210,7 @@ class _SignupPageState extends State<SignupPage> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.white70,
+                      color: Colors.black54,
                     ),
                     onPressed: () {
                       setState(() {
@@ -236,8 +236,8 @@ class _SignupPageState extends State<SignupPage> {
                 child: ElevatedButton(
                   onPressed: _handleSignup,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -248,7 +248,6 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
-              // Add this after the ElevatedButton's SizedBox
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -256,7 +255,7 @@ class _SignupPageState extends State<SignupPage> {
                   Text(
                     "Already have an account? ",
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: Colors.black54,
                       fontSize: 14,
                     ),
                   ),
@@ -270,7 +269,7 @@ class _SignupPageState extends State<SignupPage> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
@@ -285,14 +284,14 @@ class _SignupPageState extends State<SignupPage> {
                   Container(
                     height: 1,
                     width: 100,
-                    color: Colors.white54,
+                    color: Colors.black54,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Or',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -300,7 +299,7 @@ class _SignupPageState extends State<SignupPage> {
                   Container(
                     height: 1,
                     width: 100,
-                    color: Colors.white54,
+                    color: Colors.black54,
                   ),
                 ],
               ),
@@ -315,7 +314,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 padding: EdgeInsets.all(12),
                 style: IconButton.styleFrom(
-                  side: BorderSide(color: Colors.white54),
+                  side: BorderSide(color: Colors.black54),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
