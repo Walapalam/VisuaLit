@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "333224184910",
+    "project_id": "loginservice-3cc5e",
+    "storage_bucket": "loginservice-3cc5e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333224184910:android:b9878d464f6d738fd8071f",
+        "android_client_info": {
+          "package_name": "com.example.visualit_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh9G0r4SV-uJll1ZiQC6zchQC9fWj0ztw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
