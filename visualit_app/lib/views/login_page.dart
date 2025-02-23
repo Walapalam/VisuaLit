@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'forget_password_page.dart';
 import 'home_screen.dart';
 import 'signup_page.dart';
+import '../core/services/login_backend.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,14 +24,29 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      final loginBackend = LoginBackend();
+      try {
+        await loginBackend.signInWithEmailPassword(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
+
+        // Navigate to home screen after successful login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } catch (e) {
+        // Show error message in a SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
