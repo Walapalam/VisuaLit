@@ -1,0 +1,26 @@
+{
+  "title": "FEATURES",
+  "text": "Explore the amazing features of VisuaLit",
+  "section": [
+    {
+      "title": "Upload and Read Any Format Books",
+      "content": "Users can upload books in various formats (e.g., PDF, EPUB, MOBI) and read them within the app. The system automatically adjusts to different file types and ensures a seamless reading experience across formats.",
+      "icon": "book-2-svgrepo-com.svg"
+    },
+    {
+      "title": "AI-Generated Visualizations",
+      "content": "Automatically generates character illustrations, scenes, and visual elements from text descriptions, enhancing the storytelling experience.",
+      "icon": "magic-wand-svgrepo-com.svg"
+    },
+    {
+      "title": "Text-to-Speech Functionality",
+      "content": "Converts text into speech for an immersive reading experience, particularly useful for users with visual impairments or those who prefer audio content.",
+      "icon": "sound-loud-filled-svgrepo-com.svg"
+    },
+    {
+      "title": "Dictionary and Glossary Integration",
+      "content": "Provides real-time definitions for difficult words or phrases, enhancing comprehension and vocabulary building.",
+      "icon": "a-svgrepo-com.svg"
+    }
+  ]
+}
