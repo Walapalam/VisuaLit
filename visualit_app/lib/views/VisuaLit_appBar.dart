@@ -21,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       leading: Padding(
-        padding: const EdgeInsets.only(top: 16.0), // Add padding on top
+        padding: const EdgeInsets.only(top: 16.0, left: 13.0), // Add padding on top
         child: IconButton(
           icon: const Icon(Icons.menu, size: 28), // Drawer menu icon
           onPressed: () {

@@ -18,7 +18,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFF0F0F0), Color(0xFFDEDEDE)],
+          colors: [Colors.white, Colors.white],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -28,9 +28,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black12,
             blurRadius: 10.r,
-            spreadRadius: 2.r,
+            spreadRadius: 1.r,
             offset: Offset(0, -3.h),
           ),
         ],
@@ -43,7 +43,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         iconSize: 22.sp,
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         duration: const Duration(milliseconds: 300),
-        tabBackgroundColor: Colors.white.withOpacity(0.5),
+        tabBackgroundColor: Colors.black12,
         curve: Curves.easeInOut,
         rippleColor: Colors.black12,
         selectedIndex: selectedIndex,
